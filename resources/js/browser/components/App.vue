@@ -1,6 +1,5 @@
 <template>
-  <div>Hello World!
-    <router-link to="/dashboard">Dashboard</router-link>
+  <div>
     <router-view></router-view>
   </div>
   
@@ -8,6 +7,16 @@
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  data() {
+    return {
+      guest: true
+    }
+  },
+  mounted() {
+    if(this.guest){
+      return this.$route.path == '/login' ? null : this.$router.push('/login');
+    }
+  }
 }
 </script>
