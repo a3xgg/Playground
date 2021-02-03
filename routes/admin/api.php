@@ -13,3 +13,11 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::middleware('passport.api')->group(function (){
+  Route::post('login', 'AuthController@login');
+
+  Route::middleware('auth:api')->group(function (){
+    Route::get('logout', 'AuthController@logout');
+  });
+});

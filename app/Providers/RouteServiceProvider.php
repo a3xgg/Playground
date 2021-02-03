@@ -64,25 +64,35 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
+      /**
+       * Define API routes first as it will conflict with web routes
+       */
+      Route::middleware('api')
+        ->prefix('api')
+        ->name('browser.api.')
+        ->domain('playground.com')
+				->namespace($this->browser.'\api')
+				->group(base_path('routes/browser/api.php'));
 			Route::middleware('web')
 				->name('browser.')
-				->domain(env('APP_URL'))
+				->domain('playground.com')
 				->namespace($this->browser)
 				->group(base_path('routes/browser/web.php'));
 		}
 		
 		protected function mapAdminRoutes() {
+      Route::middleware('api')
+				->prefix('api')
+        ->name('admin.api.')
+        ->domain('admin.playground.com')
+				->namespace($this->admin.'\api')
+        ->group(base_path('routes/admin/api.php'));
+        
 			Route::middleware('web')
 				->name('admin.')
 				->domain('admin.' . env('DOMAIN_NAME'))
 				->namespace($this->admin)
         ->group(base_path('routes/admin/web.php'));
-        
-			Route::middleware('api')
-				->prefix('admin/api/')
-				->name('admin.api.')
-				->namespace($this->admin)
-				->group(base_path('routes/admin/api.php'));
 		}
 
     /**
