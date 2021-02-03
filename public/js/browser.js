@@ -1915,15 +1915,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+var AuthServices = __webpack_require__(/*! ../services/AuthServices.js */ "./resources/js/browser/services/AuthServices.js")["default"];
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'app',
   data: function data() {
-    return {
-      guest: true
-    };
+    return {};
   },
   mounted: function mounted() {
-    if (this.guest) {
+    if (!AuthServices.loggedIn()) {
       return this.$route.path == '/login' ? null : this.$router.push('/login');
     }
   }
@@ -1940,6 +1940,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _services_AuthServices__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../services/AuthServices */ "./resources/js/browser/services/AuthServices.js");
 //
 //
 //
@@ -1947,7 +1948,42 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      email: '',
+      password: ''
+    };
+  },
+  mounted: function mounted() {
+    if (_services_AuthServices__WEBPACK_IMPORTED_MODULE_0__["default"].loggedIn()) {
+      return this.$router.push('/dashboard');
+    }
+  },
+  methods: {
+    login: function login() {
+      var _this = this;
+
+      axios.post(route('browser.api.login'), {
+        email: this.email,
+        password: this.password
+      }).then(function (response) {
+        localStorage.setItem('access_token', response.data.access_token);
+
+        _this.$router.push('/dashboard');
+      })["catch"](function (error) {
+        return console.log(response);
+      });
+    }
+  }
+});
 
 /***/ }),
 
@@ -2015,13 +2051,33 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _services_AuthServices__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../services/AuthServices */ "./resources/js/browser/services/AuthServices.js");
 //
 //
 //
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  methods: {
+    logout: function logout() {
+      var _this = this;
+
+      axios.get(route('browser.api.logout'), {
+        headers: {
+          'Authorization': "Bearer ".concat(localStorage.getItem('access_token'))
+        }
+      }).then(function (response) {
+        localStorage.removeItem('access_token');
+        return _this.$router.push('/login');
+      })["catch"](function (error) {
+        return console.log(error);
+      });
+    }
+  }
+});
 
 /***/ }),
 
@@ -19700,7 +19756,71 @@ var render = function() {
   return _c(
     "div",
     [
-      _vm._v("\n  Login Component\n  don't have an account? "),
+      _c(
+        "form",
+        {
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.login($event)
+            }
+          }
+        },
+        [
+          _c("label", { attrs: { for: "email" } }, [_vm._v("Email")]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.email,
+                expression: "email"
+              }
+            ],
+            attrs: { id: "email", type: "text" },
+            domProps: { value: _vm.email },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.email = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "password" } }, [_vm._v("Password")]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.password,
+                expression: "password"
+              }
+            ],
+            attrs: { type: "password" },
+            domProps: { value: _vm.password },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.password = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "button",
+            { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+            [_vm._v("Login")]
+          )
+        ]
+      ),
+      _vm._v("\n  don't have an account? "),
       _c("router-link", { attrs: { to: "/register" } }, [_vm._v("Register")])
     ],
     1
@@ -19783,7 +19903,10 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("\n  Profile Component\n")])
+  return _c("div", [
+    _vm._v("\n  Profile Component\n  "),
+    _c("button", { on: { click: _vm.logout } }, [_vm._v("Logout")])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -35576,6 +35699,67 @@ __webpack_require__.r(__webpack_exports__);
   mode: 'history',
   routes: _routes__WEBPACK_IMPORTED_MODULE_1__["default"]
 }));
+
+/***/ }),
+
+/***/ "./resources/js/browser/services/AuthServices.js":
+/*!*******************************************************!*\
+  !*** ./resources/js/browser/services/AuthServices.js ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return AuthServices; });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var AuthServices = /*#__PURE__*/function () {
+  function AuthServices() {
+    _classCallCheck(this, AuthServices);
+  }
+
+  _createClass(AuthServices, null, [{
+    key: "loggedIn",
+    value: function loggedIn() {
+      var _localStorage$getItem;
+
+      return (_localStorage$getItem = localStorage.getItem('access_token')) !== null && _localStorage$getItem !== void 0 ? _localStorage$getItem : null;
+    } // static login(email, password){
+    //   Axios.post(route('browser.api.login'), {
+    //     email: email,
+    //     password: password,
+    //   }).then((response) => {
+    //     localStorage.setItem('access_token', response.data.access_token);
+    //     console.log(response);
+    //   }).catch((error) => console.log(error.response));
+    // }
+    // static logout(){
+    //   Axios.get(route('browser.api.logout'), {
+    //     headers: {
+    //       'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+    //     }
+    //   }).then((response) => {
+    //     localStorage.removeItem('access_token');
+    //     console.log(response);
+    //     $router.push('/login');
+    //   }).catch((error) => {});
+    // }
+
+  }]);
+
+  return AuthServices;
+}();
+
+
 
 /***/ }),
 

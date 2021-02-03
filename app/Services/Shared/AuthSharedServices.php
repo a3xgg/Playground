@@ -36,8 +36,10 @@ abstract class AuthSharedServices {
   }
 
   public function revokeToken(){
-    $this->tokenRepository->revokeAccessToken(Auth::user()->token()->id);
-    $this->refreshTokenRepository->revokeRefreshTokensByAccessTokenId(Auth::user()->token()->id);
+    if(isset(Auth::user()->token()->id)){
+      $this->tokenRepository->revokeAccessToken(Auth::user()->token()->id);
+      $this->refreshTokenRepository->revokeRefreshTokensByAccessTokenId(Auth::user()->token()->id);
+    }
   }
 
   abstract function login(Request $request);

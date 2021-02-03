@@ -6,17 +6,19 @@
 </template>
 
 <script>
+
+const AuthServices = require('../services/AuthServices.js').default;
+
 export default {
   name: 'app',
   data() {
     return {
-      guest: true
     }
   },
   mounted() {
-    if(this.guest){
+    if(!AuthServices.loggedIn()){
       return this.$route.path == '/login' ? null : this.$router.push('/login');
     }
-  }
+  },
 }
 </script>

@@ -22,6 +22,6 @@ Route::middleware(['passport.api'])->group(function (){
     Route::get('user', function(Request $request) {
       return $request->user();
     });
-    Route::get('logout', 'AuthController@logout');
+    Route::get('logout', 'AuthController@logout')->name('logout');
   });
 });
