@@ -52,6 +52,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
+        'admin.auth' => \App\Http\Middleware\admin\Authenticate::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
@@ -63,5 +64,8 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'passport.api' => \App\Http\Middleware\PassportCORS::class,
+        'role' => \jeremykenedy\LaravelRoles\App\Http\Middleware\VerifyRole::class,
+        'permission' => \jeremykenedy\LaravelRoles\App\Http\Middleware\VerifyPermission::class,
+        'level' => \jeremykenedy\LaravelRoles\App\Http\Middleware\VerifyLevel::class,
     ];
 }

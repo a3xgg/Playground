@@ -9,21 +9,29 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthServices extends AuthSharedServices {
 
+  protected const PATH = 'admin.auth.';
+
   public function login(Request $request){
-    $validate = Validator::make($request->all(), [
-      'email' => 'required|email',
+    return $request->method() == 'GET' ? view(self::PATH . 'index') : $this->authenticate($request);
+  }
+
+  public function authenticate(Request $request){
+    $request->validate([
+      'email' => 'required',
       'password' => 'required'
     ]);
-    if($validate->fails()) {
-      return response(['message' => 'Field\'s should not be empty.', 'from' => 'Admin Service'], 400);
-    }
-    return Auth::attempt(['email' => $request->email, 'password' => $request->password, 'is_admin' => true]) ? $this->generateToken($request) : response(['message' => 'Unauthorized'], 401) ;
+
+    return Auth::attempt([
+      'email' => $request->email, 
+      'password' => $request->password]) 
+        ? redirect()->route('admin.index') : redirect()->route('admin.login');
   }
 
-  public function logout(){
-    $this->revokeToken();
-    return response(['message' => 'Token Revoked.']);
-  }
+  public function logout(Request $request){
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
 
-  public function register(Request $request){ return null; }
+    return redirect()->route('admin.login');
+  }
 }

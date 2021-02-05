@@ -46,5 +46,4 @@ abstract class AuthSharedServices {
   }
 
   abstract function login(Request $request);
-  abstract function register(Request $request);
 }

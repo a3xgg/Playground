@@ -25,7 +25,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/home';
+    public const HOME = '/';
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -81,12 +81,12 @@ class RouteServiceProvider extends ServiceProvider
 		}
 		
 		protected function mapAdminRoutes() {
-      Route::middleware('api')
-				->prefix('api')
-        ->name('admin.api.')
-        ->domain('admin.playground.com')
-				->namespace($this->admin.'\api')
-        ->group(base_path('routes/admin/api.php'));
+      // Route::middleware('api')
+			// 	->prefix('api')
+      //   ->name('admin.api.')
+      //   ->domain('admin.playground.com')
+			// 	->namespace($this->admin.'\api')
+      //   ->group(base_path('routes/admin/api.php'));
         
 			Route::middleware('web')
 				->name('admin.')

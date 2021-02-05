@@ -8,9 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Services\Shared\AuthSharedServices;
 use Illuminate\Support\Facades\Hash;
+use App\Interfaces\auth\AuthRegisterInterface;
 
-class AuthServices extends AuthSharedServices{
+class AuthServices extends AuthSharedServices implements AuthRegisterInterface{
   public function login(Request $request){
+    dd($request->wantsJson());
     $validate = Validator::make($request->all(), [
       'email' => 'required|email',
       'password' => 'required'

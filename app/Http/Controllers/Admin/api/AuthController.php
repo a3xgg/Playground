@@ -3,18 +3,18 @@
 namespace App\Http\Controllers\Admin\api;
 
 use App\Http\Controllers\Controller;
-use App\Services\Admin\AuthServices;
+use App\Services\Admin\api\AuthApiServices;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-	protected $authService;
+	protected $authApiServices;
 
-	public function __construct(AuthServices $authService){
-		$this->authService = $authService;
+	public function __construct(AuthApiServices $authApiServices){
+		$this->authApiServices = $authApiServices;
 	}
 
-	public function login(Request $request) { return $this->authService->login($request); }
+	public function login(Request $request) { return $this->authApiServices->login($request); }
 
-	public function logout() { return $this->authService->logout(); }
+	public function logout() { return $this->authApiServices->logout(); }
 }
