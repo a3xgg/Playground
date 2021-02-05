@@ -2,12 +2,13 @@
 
 namespace App\Services\Shared;
 
+use App\Interfaces\auth\AuthLogoutInterface;
 use Illuminate\Http\Request;
 use Laravel\Passport\RefreshTokenRepository;
 use Laravel\Passport\TokenRepository;
 use Illuminate\Support\Facades\Auth;
 
-abstract class AuthSharedServices {
+abstract class AuthSharedServices implements AuthLogoutInterface {
 
   protected $tokenRepository, $refreshTokenRepository;
 
@@ -41,5 +42,4 @@ abstract class AuthSharedServices {
   }
 
   abstract function login(Request $request);
-  abstract function register(Request $request);
 }

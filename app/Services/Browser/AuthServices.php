@@ -41,7 +41,7 @@ class AuthServices extends AuthSharedServices{
     return response(['message' => 'ok', 'data' => $user]);
   }
 
-  public function logout(){
+public function logout(Request $request){
     $this->revokeToken();
     return response(['message' => 'Token Revoked.']);
   }
