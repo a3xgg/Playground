@@ -18,11 +18,19 @@ Route::middleware(['guest'])->group(function() {
 });
 
 Route::middleware(['admin.auth'])->group(function() {
+
+  Route::get('/', function() {
+    return view('admin.index');
+  })->name('index');
+
   Route::middleware(['role:admin|super.admin'])->group(function(){
-    Route::get('/', function() {
-      return view('admin.index');
-    })->name('index');
+    Route::get('role-permission', 'RolePermissionController@index')->name('role-permission');
+
+    Route::resource('role', 'RoleController')->only(['create', 'edit'])->name('*', 'role');
+    Route::resource('user', 'UserController')->only(['create', 'edit'])->name('*', 'user');
+    Route::resource('permission', 'PermissionController')->only(['create', 'edit'])->name('*', 'permission');
   });
+
   Route::get('logout', 'AuthController@logout')->name('logout');
 });
 
